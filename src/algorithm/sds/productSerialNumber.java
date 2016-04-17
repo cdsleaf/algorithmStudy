@@ -7,7 +7,7 @@ public class productSerialNumber {
 
 	public static void main(String[] args) throws Exception {
 
-		System.setIn(new FileInputStream("C:/algorithm_input/sds/productSerialNumber_input.txt"));
+		System.setIn(new FileInputStream("C:/Users/cho/git/algorithmStudy/input_txt/sds/productSerialNumber_input.txt"));
 
 		Scanner sc = new Scanner(System.in);
 		int T;
