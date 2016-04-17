@@ -21,7 +21,6 @@ public class productSerialNumber {
 			/*
 						각 테스트 케이스를 표준 입력에서 읽어옵니다.
 			 */
-
 			int N = sc.nextInt();
 
 			char[][] map = new char[N][N];
