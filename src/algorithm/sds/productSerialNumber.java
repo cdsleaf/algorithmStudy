@@ -3,6 +3,12 @@ import java.io.FileInputStream;
 import java.util.Scanner;
 
 // 제품의 일련번호
+/* 아래는 결과 값.
+#1 6
+#2 4
+#3 76
+#4 10606
+*/
 public class productSerialNumber {
 	
 	static int T, N; //T는 전체 테스트 케이스의 수, N은 일련번호에 사용되는 알파벳의 갯수
@@ -48,7 +54,6 @@ public class productSerialNumber {
 					count++;
 				}
 			}
-			
 			//count는 charNum 보다 앞자리의 알파벳중 이미 사용된 알파벳을 제외한 나머지의 갯수.
 			serialNumber = serialNumber + count * factorial(N-i-1);
 			
