@@ -2,12 +2,12 @@ package algorithm.sds;
 import java.io.FileInputStream;
 import java.util.Scanner;
 
-// Á¦Ç°ÀÇ ÀÏ·Ã¹øÈ£
+// ì œí’ˆì˜ ì¼ë ¨ë²ˆí˜¸
 public class productSerialNumber {
 	
-	static int T, N; //T´Â ÀüÃ¼ Å×½ºÆ® ÄÉÀÌ½ºÀÇ ¼ö, NÀº ÀÏ·Ã¹øÈ£¿¡ »ç¿ëµÇ´Â ¾ËÆÄºªÀÇ °¹¼ö
-	static String A, B; //A´Â Ã¹¹øÀç ÀÏ·Ã¹øÈ£, B´Â µÎ¹øÂ° ÀÏ·Ã¹øÈ£
-	static long result; //°á°ú°ª. ¹®Á¦¿¡¼­ 64ºñÆ® Á¤¼öÇüÀ» ¾ğ±ŞÇßÀ¸¹Ç·Î long Å¸ÀÔÀ¸·Î ¼±¾ğ
+	static int T, N; //TëŠ” ì „ì²´ í…ŒìŠ¤íŠ¸ ì¼€ì´ìŠ¤ì˜ ìˆ˜, Nì€ ì¼ë ¨ë²ˆí˜¸ì— ì‚¬ìš©ë˜ëŠ” ì•ŒíŒŒë²³ì˜ ê°¯ìˆ˜
+	static String A, B; //AëŠ” ì²«ë²ˆì¬ ì¼ë ¨ë²ˆí˜¸, BëŠ” ë‘ë²ˆì§¸ ì¼ë ¨ë²ˆí˜¸
+	static long result; //ê²°ê³¼ê°’. ë¬¸ì œì—ì„œ 64ë¹„íŠ¸ ì •ìˆ˜í˜•ì„ ì–¸ê¸‰í–ˆìœ¼ë¯€ë¡œ long íƒ€ì…ìœ¼ë¡œ ì„ ì–¸
 
 	public static void main(String[] args) throws Exception {
 
@@ -22,8 +22,8 @@ public class productSerialNumber {
 			A = sc.next();
 			B = sc.next();
 			
-			//ÁÖ¾îÁø ÀÏ·Ã¹øÈ£ A B Áß¿¡ ¾î´À °ªÀÌ ´õ ³ªÁß¿¡ »ı»êµÇ¾ú´ÂÁö ¾Ë ¼ö ¾ø±â ¶§¹®¿¡ Math.abs ÇÔ¼ö¸¦ È°¿ëÇØ¼­ Àı´ë°ªÀ» ±¸ÇÑ´Ù.
-			result = Math.abs(returnSerialNumber(A) - returnSerialNumber(B))-1; //µÎ Á¦Ç°»çÀÌÀÇ »ı»êµÈ Á¦Ç° ¼ö ÀÌ¹Ç·Î ÀÚ±âÀÚ½ÅÀ» Ãß°¡·Î »©¾ßÇÔ.
+			//ì£¼ì–´ì§„ ì¼ë ¨ë²ˆí˜¸ A B ì¤‘ì— ì–´ëŠ ê°’ì´ ë” ë‚˜ì¤‘ì— ìƒì‚°ë˜ì—ˆëŠ”ì§€ ì•Œ ìˆ˜ ì—†ê¸° ë•Œë¬¸ì— Math.abs í•¨ìˆ˜ë¥¼ í™œìš©í•´ì„œ ì ˆëŒ€ê°’ì„ êµ¬í•œë‹¤.
+			result = Math.abs(returnSerialNumber(A) - returnSerialNumber(B))-1; //ë‘ ì œí’ˆì‚¬ì´ì˜ ìƒì‚°ëœ ì œí’ˆ ìˆ˜ ì´ë¯€ë¡œ ìê¸°ìì‹ ì„ ì¶”ê°€ë¡œ ë¹¼ì•¼í•¨.
 
 			System.out.println("#"+test_case+" "+result);
 		}
@@ -31,28 +31,28 @@ public class productSerialNumber {
 	
 	public static long returnSerialNumber(String serial){
 		
-		long serialNumber = 0; //ÀÔ·Â¹ŞÀº ¹®ÀÚ¿­ÀÇ Á¦Ç° »ı»ê¹øÈ£.
-		int[] abc = new int[N]; //»ç¿ëÇÑ ¾ËÆÄºªÀ» Ã¼Å© ÇÒ ¹è¿­.
+		long serialNumber = 0; //ì…ë ¥ë°›ì€ ë¬¸ìì—´ì˜ ì œí’ˆ ìƒì‚°ë²ˆí˜¸.
+		int[] abc = new int[N]; //ì‚¬ìš©í•œ ì•ŒíŒŒë²³ì„ ì²´í¬ í•  ë°°ì—´.
 
 		for(int i = 0; i < N; i++){
-			abc[i] = 0; // i´Â  ¹®ÀÚ-'a' ÀÇ Á¤¼öÇü Çüº¯È¯ °ªÀ» ÀÇ¹Ì. Áï, a=0, b=1 ... »ç¿ëÇÏÁö ¾ÊÀº ¾ËÆÄºªÀÇ °ªÀ» 0À¸·Î ÀÔ·Â 
+			abc[i] = 0; // iëŠ”  ë¬¸ì-'a' ì˜ ì •ìˆ˜í˜• í˜•ë³€í™˜ ê°’ì„ ì˜ë¯¸. ì¦‰, a=0, b=1 ... ì‚¬ìš©í•˜ì§€ ì•Šì€ ì•ŒíŒŒë²³ì˜ ê°’ì„ 0ìœ¼ë¡œ ì…ë ¥ 
 		}
 		
 		for(int i = 0; i < N; i++){
 			
 			int charNum = (int)(serial.charAt(i)- 'a');
 			
-			int count = 0; //ÀÌ¹Ì »ç¿ëÇÑ ¾ËÆÄºªÀÇ °¹¼ö¸¦ °è»ê. 
-			for(int j=0; j<charNum; j++){ //µ¿ÀÏ ¾ËÆÄºªÀÌ µÎ¹ø ³ª¿Ã ¼ö ¾øÀ¸¹Ç·Î, for ¹®¿¡¼­ charNum Àü±îÁö¸¸ °Ë»ç 
+			int count = 0; //ì´ë¯¸ ì‚¬ìš©í•œ ì•ŒíŒŒë²³ì˜ ê°¯ìˆ˜ë¥¼ ê³„ì‚°. 
+			for(int j=0; j<charNum; j++){ //ë™ì¼ ì•ŒíŒŒë²³ì´ ë‘ë²ˆ ë‚˜ì˜¬ ìˆ˜ ì—†ìœ¼ë¯€ë¡œ, for ë¬¸ì—ì„œ charNum ì „ê¹Œì§€ë§Œ ê²€ì‚¬ 
 				if(abc[j] == 0){
 					count++;
 				}
 			}
 			
-			//count´Â charNum º¸´Ù ¾ÕÀÚ¸®ÀÇ ¾ËÆÄºªÁß ÀÌ¹Ì »ç¿ëµÈ ¾ËÆÄºªÀ» Á¦¿ÜÇÑ ³ª¸ÓÁöÀÇ °¹¼ö.
+			//countëŠ” charNum ë³´ë‹¤ ì•ìë¦¬ì˜ ì•ŒíŒŒë²³ì¤‘ ì´ë¯¸ ì‚¬ìš©ëœ ì•ŒíŒŒë²³ì„ ì œì™¸í•œ ë‚˜ë¨¸ì§€ì˜ ê°¯ìˆ˜.
 			serialNumber = serialNumber + count * factorial(N-i-1);
 			
-			abc[charNum] = 1; //»ç¿ëµÇ¾úÀ¸¹Ç·Î °ªÀ¸·Î 1À» ÀÔ·Â;
+			abc[charNum] = 1; //ì‚¬ìš©ë˜ì—ˆìœ¼ë¯€ë¡œ ê°’ìœ¼ë¡œ 1ì„ ì…ë ¥;
 		}
 		
 		return serialNumber;
