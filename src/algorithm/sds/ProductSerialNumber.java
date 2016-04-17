@@ -9,7 +9,7 @@ import java.util.Scanner;
 #3 76
 #4 10606
 */
-public class productSerialNumber {
+public class ProductSerialNumber {
 	
 	static int T, N; //T는 전체 테스트 케이스의 수, N은 일련번호에 사용되는 알파벳의 갯수
 	static String A, B; //A는 첫번재 일련번호, B는 두번째 일련번호
