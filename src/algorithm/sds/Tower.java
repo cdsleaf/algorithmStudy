@@ -28,15 +28,6 @@ public class Tower {
 			if(j==1){
 				resultArray[1] = 0;
 				
-				if(!towerStack.isEmpty()){
-					while(true){
-						resultArray[towerStack.pop()] = 0;
-						if(towerStack.isEmpty()){
-							break;
-						}
-					}
-				}
-				
 			}else if(towerArray[j] <= towerArray[j-1]){
 				resultArray[j] = j-1;
 				if(!towerStack.isEmpty()){
@@ -54,6 +45,7 @@ public class Tower {
 				}
 			}else{
 				towerStack.push(j);
+				resultArray[j] = 0;
 			}
 		}
 		
