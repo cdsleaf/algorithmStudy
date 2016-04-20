@@ -45,7 +45,7 @@ public class Nqueen {
 		
 		loop:for(int i=0; i<N; i++){
 			if(col[i] == 1){ //이미 해당 row 에 퀸이 있다면 열 가지치기
-				continue loop;
+				continue;
 			}
 			
 			//대각선 방향의 퀸이 있는 지 확인 있다면 가지치기
