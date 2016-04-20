@@ -18,7 +18,7 @@ public class Nqueen {
 	
 	public static void main(String[] args) throws Exception {
 
-		System.setIn(new FileInputStream("C:/Users/cho/git/algorithmStudy/input_txt/sds/nqueen.txt"));
+		System.setIn(new FileInputStream("C:/Users/SDS/git/algorithmStudy/input_txt/sds/nqueen.txt"));
 
 		Scanner sc = new Scanner(System.in);
 		T = sc.nextInt();
@@ -49,13 +49,22 @@ public class Nqueen {
 			}
 			
 			//대각선 방향의 퀸이 있는 지 확인 있다면 가지치기
-			for(int j=0; j<N; j++){
-				if(row-j == i-col[j]){
-					
+			// 현재 시도하는 퀸의 좌표 : (row, i) (0 베이스)
+			// 기존 배치된 퀸의 좌표   : (j, sol[j]) (0 베이스)
+			// | row - j | == | i - sol[j] | ==> 대각선 방향에 퀸이 배치 됨 
+			for(int j=0; j<row; j++){
+				if(Math.abs(row-j) == Math.abs(i-sol[j])){
+					continue loop;
 				}
 			}
 			
-			backtrack(i+1);
+			sol[row] = i; //퀸을 배치한 열 저장(각 row에 배치된 퀸의 컬럼 인덱스)
+			
+			col[i] = 1; //해당 열에 퀸이 있음을 표시.
+			
+			//다음 행으로 재귀호출.
+			backtrack(row+1);
+			col[i] = 0; //해당 열에 퀸이 있음을 해제.
 		}
 	}
 	
