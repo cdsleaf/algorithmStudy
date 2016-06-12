@@ -1,4 +1,4 @@
-package algorithm.sds;
+package algorithm;
 
 import java.io.FileInputStream;
 import java.util.Scanner;

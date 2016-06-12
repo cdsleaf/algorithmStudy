@@ -1,8 +1,8 @@
-package algorithm.sds;
+package algorithm;
 
 import java.util.ArrayList;
 
-class Dfs1t {
+class Dfs1 {
 
 	// 정점의 개수
 	static int V = 5;
@@ -47,8 +47,25 @@ class Dfs1t {
 
 	public static void dfs(int node) {
 		
-		// 구현 부분
+		// 방문 정점 표시
+		visited[node] = 1;
 		
+		// 방문 정점 처리
+		processVertex(node);
+		
+		if(adjList[node] != null) {
+			
+			// 모든 인접 정점들을 방문
+			for(int adjacent : adjList[node]) {
+				// 방문한 정점이면 건너 뜀
+				if(visited[adjacent] == 1) {
+					continue;
+				}
+				
+				// 재귀호출
+				dfs(adjacent);
+			}
+		}
 	}
 	public static void processVertex(int node) {
 		// 방문 정점 출력

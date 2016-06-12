@@ -1,4 +1,4 @@
-package algorithm.sds;
+package algorithm;
 
 import java.util.ArrayList;
 
