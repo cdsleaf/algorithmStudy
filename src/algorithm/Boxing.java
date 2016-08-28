@@ -22,6 +22,7 @@ public class Boxing {
 	static int sectionResult = 0; //각 구간별 최소값을 구할 때 최소 비용 
 	static Set<Integer> toyTypeSet = new  HashSet<Integer>(); //각 구간별 장난감 종류.
 	static int lastSectionToyType = 0;
+	static int sectionEnd = 0;
 	static int result = 0; //각각의 테스트케이스 별 장난감 포장 최소 비용
 
 	
@@ -95,6 +96,7 @@ public class Boxing {
 				sectionResult = 0;
 				toyTypeSet.clear();
 				lastSectionToyType = toyArray[n];
+				sectionEnd = n+k;
 				calculateSection(n, n+k,-1);
 				
 				boxingCost[n][k] = sectionResult;
@@ -108,10 +110,17 @@ public class Boxing {
 	
 	public static void calculateSection(int start, int end, int sectionCost){
 		
-		if(start)
+		if(start > sectionEnd){
+			if(sectionCost < sectionResult){
+				sectionResult = sectionCost;
+			}
+			return;
+		}
 		
 		toyTypeSet.add(toyArray[start]);
-		calculateSection(start+1, end, sectionCost);
 		
+		for(int l = 1; l<=end; l++){
+			calculateSection(start, l ,sectionCost);
+		}
 	}
 }
