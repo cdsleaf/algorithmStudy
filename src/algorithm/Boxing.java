@@ -18,7 +18,7 @@ public class Boxing {
 	static int T, TC, N; //T는 전체 테스트 케이스의 수, TC는 각 테스트케이스의 총 장난감 갯수, N은 각 테스트케이스의 장난감 종류 갯수
 	// N 은 1부터 N 까지의 자연수.
 	static int[] toyArray = new int[1000];
-	static int[][] boxingCost = new int[1000][19]; //장난감들의 순서에 따라 각각 포장한 비용을 저장하는 배열. 두번째 배열크기는 박스당 최대 20 이므로 첫번째 배열에서 최대 20개까지만 경우의 수 비용을 저장.
+	static int[][] boxingCost = new int[1000][20]; //장난감들의 순서에 따라 각각 포장한 비용을 저장하는 배열. 두번째 배열크기는 박스당 최대 20 이므로 첫번째 배열에서 최대 20개까지만 경우의 수 비용을 저장.
 	static int sectionResult = 0; //각 구간별 최소값을 구할 때 최소 비용 
 	static Set<Integer> toyTypeSet = new  HashSet<Integer>(); //각 구간별 장난감 종류.
 	static int lastSectionToyType = 0;
@@ -35,7 +35,7 @@ public class Boxing {
 		
 		//boxingCost 초기화. 초기화 값은 -1
 		for(int boxingCostA = 0; boxingCostA<1000; boxingCostA++){
-			for(int boxingCostB = 0; boxingCostB<1000; boxingCostB++){
+			for(int boxingCostB = 0; boxingCostB<19; boxingCostB++){
 				
 				if(boxingCostB == 0) {
 					boxingCost[boxingCostA][boxingCostB] = 1;
@@ -53,18 +53,24 @@ public class Boxing {
 			
 			int toyNum =0;
 			int firstToy = 0;
+			int firstIndex = 0;
 			for(int i = 0; i<TC; i++){
 				toyNum = sc.nextInt();
 				toyArray[i] = toyNum;
 				
 				if(i==0){
 					firstToy = toyNum;
+					firstIndex = 0;
 					result = 1;
 				}
 
-				if(i!=0 && firstToy != toyNum){
-					firstToy = toyNum;
-					result++;
+				if(i!=0){
+					if(firstToy != toyNum){
+						boxingCost[firstIndex][i-1-firstIndex] = 1;
+						firstIndex = i;
+						firstToy = toyNum;
+						result++;
+					}
 				}	
 			}
 			//여기까지 toyArray 셋팅하고 전체 최소비용 최초값 계산완료
@@ -73,6 +79,7 @@ public class Boxing {
 			repeatBoxing(0, 1);	
 
 			System.out.println("#"+test_case+" "+result);
+			break; //임시 테스트용 break.
 		}
 	}
 	
@@ -93,11 +100,11 @@ public class Boxing {
 			
 			if(boxingCost[n][k] == -1){
 				//해당 구간에 대해 최소값 구하는 계산 시작.
-				sectionResult = 0;
+				sectionResult = -1;
 				toyTypeSet.clear();
 				lastSectionToyType = toyArray[n];
 				sectionEnd = n+k;
-				calculateSection(n, n+k,-1);
+				calculateSection(n, n+k,1);
 				
 				boxingCost[n][k] = sectionResult;
 			}
@@ -111,16 +118,37 @@ public class Boxing {
 	public static void calculateSection(int start, int end, int sectionCost){
 		
 		if(start > sectionEnd){
+			if(sectionResult == -1){
+				for(int m=start; m<=end; m++){
+					toyTypeSet.add(toyArray[m]);
+				}
+				
+				int totalSet = toyTypeSet.size();
+				
+				if( (totalSet*totalSet) <sectionResult){
+					sectionResult = sectionCost;
+				}
+			}
+			
 			if(sectionCost < sectionResult){
 				sectionResult = sectionCost;
 			}
+			//가장 최소값을 비용 배열에 저장한다.
+			boxingCost[start][end-start] = sectionResult;
 			return;
 		}
 		
-		toyTypeSet.add(toyArray[start]);
-		
-		for(int l = 1; l<=end; l++){
-			calculateSection(start, l ,sectionCost);
+		if(boxingCost[start][end-start] != -1){
+			//값을 알면 !!
+			sectionResult = boxingCost[start][end-start];
+			
+		}else{
+			//값을 모르면? 찾자.
+			for(int m=0;m<=end-start; m++){
+				calculateSection(start+m+1, end ,sectionCost+boxingCost[start][m]);
+			}
 		}
+		
+		
 	}
 }
