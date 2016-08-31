@@ -76,10 +76,11 @@ public class Boxing1 {
 
 				if(i!=0){
 					if(firstToy != toyNum){
-						boxingCost[firstIndex][i-1-firstIndex] = 1; //i-1-firstIndex 여기에서 -1 하는 건 직전까지로 계산해야하기 때문.
 						firstIndex = i;
 						firstToy = toyNum;
 						result++;
+					}else{
+						boxingCost[firstIndex][i-firstIndex] = 1;
 					}
 					
 					if(toyArray[i-1] != toyArray[i]){
