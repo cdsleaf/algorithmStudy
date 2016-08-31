@@ -11,6 +11,10 @@ import java.util.Scanner;
  * #4 21
  * #5 31
  * #6 29
+ * #7 41
+ * #8 50
+ * #9 43
+ * #10 50
  */
 public class Boxing1 {
 	
