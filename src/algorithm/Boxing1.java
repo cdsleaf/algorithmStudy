@@ -64,6 +64,8 @@ public class Boxing1 {
 			int toyNum =0;
 			int firstToy = 0;
 			int firstIndex = 0;
+			int hashsetFirstIndex = 0;
+			HashSet firstSet = new HashSet();
 			for(int i = 0; i<TC; i++){
 				toyNum = sc.nextInt();
 				toyArray[i] = toyNum;
@@ -72,9 +74,22 @@ public class Boxing1 {
 					firstToy = toyNum;
 					firstIndex = 0;
 					result = 1;
+					
+					hashsetFirstIndex = 0;
+					firstSet.add(toyNum);
 				}
 
 				if(i!=0){
+					
+					firstSet.add(toyNum);
+					
+					if(firstSet.size() != i+1-hashsetFirstIndex){
+						hashsetFirstIndex = i;
+						firstSet.clear();
+					}else{
+						boxingCost[hashsetFirstIndex][i-hashsetFirstIndex] = firstSet.size();
+					}
+					
 					if(firstToy != toyNum){
 						
 						if(firstIndex != 0){
@@ -120,9 +135,13 @@ public class Boxing1 {
 //				}
 //			}
 			
+			boxingCost[0][TC-1] = result;
+			
 			//boxingCost를 반복문으로 모든 경우의 수를 계산해서 최소비용을 찾는다.
 			if(TC != N){ 
-				repeatBoxing(0, 0);	
+				repeatBoxing(0, 0, 0);	
+				
+				result = boxingCost[0][TC-1];
 			}else{
 				result = TC; //장난감의 종류와 전체 갯수가 동일하다면 굳이 계산할 필요 없음.
 			}
@@ -135,19 +154,31 @@ public class Boxing1 {
 		}
 	}
 	
-	public static void repeatBoxing(int n, int t) {
+	public static void repeatBoxing(int originN, int n, int t) {
 		// 박싱 비용 계산 중, 현재까지의 최소비용 - result 보다 같거나 커질 경우 중단. 이전 으로 되돌아 간다.
-		if (t >= result) {
-			return;
-		} else if (n == TC - 1) {
-			if(t+1 < result){
-				result = t+1; // 최소값 갱신.
+		
+		if(originN != 0 && originN == n){
+			if(boxingCost[originN][TC-1] != -1){
+				if(boxingCost[0][TC-1] > boxingCost[originN][TC-1] + t){
+					boxingCost[0][TC-1] = boxingCost[originN][TC-1] + t;
+				}
+				return;
+			}else{
+				boxingCost[originN][TC-1] = TC-originN;
+			}
+		}
+		
+		if (n == TC - 1) {
+			if(t+1 < boxingCost[originN][TC-1]){
+				boxingCost[originN][TC-1] = t+1; // 최소값 갱신.
 			}
 			return;
 		}else if(n> TC-1){
-			if(t < result){
-				result = t; // 최소값 갱신.
+			if(t < boxingCost[originN][TC-1]){
+				boxingCost[originN][TC-1] = t; // 최소값 갱신.
 			}
+			return;
+		}else if (t >= boxingCost[originN][TC-1]) {
 			return;
 		}
 
@@ -159,7 +190,7 @@ public class Boxing1 {
 			
 			//연속되는 값이 현재 k값의 최대인 20을 넘어서까지 이어지는지 확인.이어진다면, 연속되는 값이 시작되기 직전의 값까지로 박스를 자른다.
 			//여기에서...연속되는 값의 집합이 나타날때, 연속되는 값 3 4 2 1 1//1 1 1 
-			if(boxingCost[n+k+1][20-(k+1)] == 1){
+			if(boxingCost[n+k][20-k] == 1){
 				
 				break;
 			}
@@ -184,7 +215,7 @@ public class Boxing1 {
 				calculateSection(n, k, n, k, 0, initSet1);
 			}
 
-			repeatBoxing(k+n+1, t+boxingCost[n][k]);
+			repeatBoxing(originN, k+n+1, t+boxingCost[n][k]);
 		}
 	}
 	
@@ -224,6 +255,12 @@ public class Boxing1 {
 		}	
 
 		for(int l=0; l<endIndex; l++){
+			
+			//동일한 장난감이 붙어 있다면 하나의 묶음으로 처리해서 건너뛴다.
+			if(l != endIndex-1 && toyArray[start+l] == toyArray[start+l+1]){
+				continue;
+			}
+			
 			if(boxingCost[start][l] == -1) {
 				// 해당 구간에 대해 최소값 구하는 계산 시작.
 				HashSet initSet2 = new HashSet();
