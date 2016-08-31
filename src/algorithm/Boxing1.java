@@ -76,11 +76,23 @@ public class Boxing1 {
 
 				if(i!=0){
 					if(firstToy != toyNum){
+						
+						if(firstIndex != 0){
+							boxingCost[firstIndex-1][i-1-firstIndex] = 2;
+							boxingCost[firstIndex-1][i-firstIndex] = 3;
+						}
+							
+						boxingCost[firstIndex][i-firstIndex] = 2;
+						
 						firstIndex = i;
 						firstToy = toyNum;
 						result++;
 					}else{
 						boxingCost[firstIndex][i-firstIndex] = 1;
+					
+						if(firstIndex != 0){
+							boxingCost[firstIndex-1][i-firstIndex] = 2;
+						}
 					}
 					
 					if(toyArray[i-1] != toyArray[i]){
@@ -88,7 +100,13 @@ public class Boxing1 {
 					}else{
 						boxingCost[i-1][1] = 1;
 					}
-				}	
+				}
+				
+				if(i > 1){
+					if((toyArray[i-2] != toyArray[i-1]) && (toyArray[i-1] != toyArray[i])){
+						boxingCost[i-2][2] = 3;
+					}
+				}
 			}
 			//여기까지 toyArray 셋팅하고 전체 최소비용 최초값 계산완료
 			
@@ -103,7 +121,11 @@ public class Boxing1 {
 //			}
 			
 			//boxingCost를 반복문으로 모든 경우의 수를 계산해서 최소비용을 찾는다.
-			repeatBoxing(0, 0);	
+			if(TC != N){ 
+				repeatBoxing(0, 0);	
+			}else{
+				result = TC; //장난감의 종류와 전체 갯수가 동일하다면 굳이 계산할 필요 없음.
+			}
 
 			System.out.println("#"+test_case+" "+result);
 			//break; //임시 테스트용 break.
@@ -134,6 +156,14 @@ public class Boxing1 {
 			if (n + k > TC - 1) {
 				break;
 			}
+			
+			//연속되는 값이 현재 k값의 최대인 20을 넘어서까지 이어지는지 확인.이어진다면, 연속되는 값이 시작되기 직전의 값까지로 박스를 자른다.
+			//여기에서...연속되는 값의 집합이 나타날때, 연속되는 값 3 4 2 1 1//1 1 1 
+			if(boxingCost[n+k+1][20-(k+1)] == 1){
+				
+				break;
+			}
+			
 			//동일한 장난감이 붙어 있다면 하나의 묶음으로 처리해서 건너뛴다.
 			if(k != 19 && toyArray[n+k] == toyArray[n+k+1]){
 				continue;
@@ -141,9 +171,17 @@ public class Boxing1 {
 			
 			if (boxingCost[n][k] == -1) {
 				// 해당 구간에 대해 최소값 구하는 계산 시작.
-				HashSet initSet = new HashSet();
-				boxingCost[n][k] = k+1; //해당 구간의 비용을 디폴트로 셋팅.(디폴트는 해당 구간 장난감 전체의 수)
-				calculateSection(n, k, n, k, 0, initSet);
+				HashSet initSet1 = new HashSet();
+				for(int p=0; p<=k; p++){
+					initSet1.add(toyArray[n+p]);
+				}
+				if((initSet1.size() * initSet1.size()) < n+k ){
+					boxingCost[n][k] = initSet1.size() * initSet1.size(); //해당 구간의 비용을 디폴트로 셋팅.(디폴트는 해당 구간 장난감 전체의 수)
+				}else{
+					boxingCost[n][k] = k+1; //해당 구간의 비용을 디폴트로 셋팅.(디폴트는 해당 구간 장난감 전체의 수)
+				}
+				initSet1.clear();
+				calculateSection(n, k, n, k, 0, initSet1);
 			}
 
 			repeatBoxing(k+n+1, t+boxingCost[n][k]);
@@ -155,6 +193,10 @@ public class Boxing1 {
 		//해당 구간의 최소비용을 산출한다. start => 1 이고 endindex가 18 이라면, 1~19 사이 구간의 최소비용 계산
 		//여기서 구하는건 최대 20개가 있는 구간임.
 		// x, 1 은 이미 값이 구해져 있으므로, 가장 처음은 x, 2 (즉, 3개 집합)
+		
+		if(sectionCost >= boxingCost[originStart][originEndIndex]){
+			return;
+		}
 		
 		if(endIndex == 0){
 			//마지막 까지 왔다면. 지금까지의 누적된 비용+1 이게 마지막까지 도달한 이번 케이스의 비용.
@@ -184,9 +226,20 @@ public class Boxing1 {
 		for(int l=0; l<endIndex; l++){
 			if(boxingCost[start][l] == -1) {
 				// 해당 구간에 대해 최소값 구하는 계산 시작.
-				HashSet initSet = new HashSet();
-				boxingCost[start][l] = start+l; //해당 구간의 비용을 디폴트로 셋팅.(디폴트는 해당 구간 장난감 전체의 수)
-				calculateSection(start, l, start, l, 0, initSet);
+				HashSet initSet2 = new HashSet();
+				
+				for(int q=0; q<=l; q++){
+					initSet2.add(toyArray[start+q]);
+				}
+				if((initSet2.size() * initSet2.size()) < start+l ){
+					boxingCost[start][l] = initSet2.size() * initSet2.size(); //해당 구간의 비용을 디폴트로 셋팅.(디폴트는 해당 구간 장난감 전체의 수)
+				}else{
+					boxingCost[start][l] = start+l; //해당 구간의 비용을 디폴트로 셋팅.(디폴트는 해당 구간 장난감 전체의 수)
+				}
+				initSet2.clear();
+				
+				//boxingCost[start][l] = start+l; //해당 구간의 비용을 디폴트로 셋팅.(디폴트는 해당 구간 장난감 전체의 수)
+				calculateSection(start, l, start, l, 0, initSet2);
 			}
 			toySet.add(toyArray[start+l]);
 			calculateSection(originStart, originEndIndex, start+l+1, endIndex-l-1, sectionCost+boxingCost[start][l], toySet);
