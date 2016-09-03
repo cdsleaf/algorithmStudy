@@ -1,4 +1,4 @@
-package algorithm;
+package algorithm.etc;
 import java.io.FileInputStream;
 import java.util.Arrays;
 import java.util.Scanner;
