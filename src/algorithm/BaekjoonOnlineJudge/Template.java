@@ -1,4 +1,4 @@
-package BaekjoonOnlineJudge;
+package algorithm.BaekjoonOnlineJudge;
 import java.io.FileInputStream;
 import java.util.Scanner;
 
