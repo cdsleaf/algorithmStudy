@@ -38,12 +38,12 @@ public class BOGGLE {
 				N = 5, //게임판의 크기는 5*5 로 고정.
 				WC; //찾아야할 단어의 갯수.
 	static int board[][] = new int[N][N]; //게임판의 알파벳을 저장할 배열
-	static String words[][]; //찾을 단어들을 저장할 배열
+	static String words[][] = new String[10][2]; //찾을 단어들을 저장할 배열
 	static String scanWord;
 
 	public static void main(String[] args) throws Exception {
 		
-		System.setIn(new FileInputStream("../input/BOGGLE.txt"));
+		System.setIn(new FileInputStream("./input_txt/algospot/BOGGLE.txt"));
 		
 		Scanner sc = new Scanner(System.in);
 		T = sc.nextInt();
@@ -58,11 +58,12 @@ public class BOGGLE {
 			}
 			
 			WC = sc.nextInt();
-			
+
 			for(int wordCount=0; wordCount<WC; wordCount++){
 				words[wordCount][0] = sc.next();
+				words[wordCount][1] = "NO";
 			}
-			
+
 			//여기부터 알고리즘 시작.
 			
 			
