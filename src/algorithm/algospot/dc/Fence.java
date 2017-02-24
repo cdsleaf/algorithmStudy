@@ -64,31 +64,41 @@ public class Fence {
 		int ret = Math.max(searching(start, mid), searching(mid+1, end));
 		
 		int left = mid-1<start ? start : mid-1;
-		int right = mid+1>end ? end : mid+1 ;
+		int right = mid;
 		
 		boolean checkStart = true,  checkEnd = true;
-		int minH = mid;
+		int minH = fenceArray[right] > fenceArray[left] ? left : right;
 		
 		while(left >= start || right <= end){
 			
-			if(fenceArray[left] > fenceArray[right]){
+			if( (fenceArray[left] > fenceArray[right] && checkStart) || (checkStart && !checkEnd) ){
 				
-				if(fenceArray[minH] > fenceArray[left]) minH = left;
+				minH = getMinIndex(left, minH, right);
 				
 				ret = Math.max(ret, ((right-left+1) * fenceArray[minH]));
 				
 				if(left != start) left--;
+				else checkStart = false;
 			}else{
 				
-				if(fenceArray[minH] > fenceArray[right]) minH = right;
+				if(mid == right && right < end) right++;
+				
+				minH = getMinIndex(left, minH, right);
 				
 				ret = Math.max(ret, ((right-left+1) * fenceArray[minH]));
 				if(right != end) right++;
+				else checkEnd = false;
 			}
 			
-			if(left == start && right == end) break;
+			if(!checkStart  && !checkEnd ) break;
 		}
 		
 		return ret;
+	}
+	
+	public static int getMinIndex(int l, int m, int r){
+		
+		if(fenceArray[l] > fenceArray[r]) return fenceArray[r] < fenceArray[m] ? r:m;
+		else return fenceArray[l] < fenceArray[m] ? l:m;
 	}
 }
