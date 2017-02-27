@@ -59,38 +59,38 @@ public class Fence {
 			}
 		}
 		
-		int mid = (end+start)/2;
+		int mid, left, right, minH; 
+		boolean checkStart, checkEnd;
+		
+		minH = left = right = mid = (end+start)/2;	
+		checkStart = checkEnd = true;
 		
 		int ret = Math.max(searching(start, mid), searching(mid+1, end));
 		
-		int left = mid-1<start ? start : mid-1;
-		int right = mid;
-		
-		boolean checkStart = true,  checkEnd = true;
-		int minH = fenceArray[right] > fenceArray[left] ? left : right;
-		
-		while(left >= start || right <= end){
+		while(checkStart || checkEnd){
 			
-			if( (fenceArray[left] > fenceArray[right] && checkStart) || (checkStart && !checkEnd) ){
+			if(!checkStart || !checkEnd){
 				
-				minH = getMinIndex(left, minH, right);
-				
-				ret = Math.max(ret, ((right-left+1) * fenceArray[minH]));
-				
-				if(left != start) left--;
-				else checkStart = false;
+				if(checkStart){
+					left--;
+					if(left == start) checkStart  = false;
+				}else{
+					right++;
+					if(right == end) checkEnd  = false;
+				}
 			}else{
-				
-				if(mid == right && right < end) right++;
-				
-				minH = getMinIndex(left, minH, right);
-				
-				ret = Math.max(ret, ((right-left+1) * fenceArray[minH]));
-				if(right != end) right++;
-				else checkEnd = false;
+				//양쪽 모두 확장 가능한 경우.
+				if(fenceArray[left-1] > fenceArray[right+1]){
+					left--;
+					if(left == start) checkStart  = false;
+				}else{
+					right++;
+					if(right == end) checkEnd  = false;
+				}
 			}
 			
-			if(!checkStart  && !checkEnd ) break;
+			minH = getMinIndex(left, minH, right);
+			ret = Math.max(ret, ((right-left+1) * fenceArray[minH]));
 		}
 		
 		return ret;
