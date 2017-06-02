@@ -1,0 +1,13 @@
+2
+6
+anagram
+managra
+flow
+wolf
+nameless
+salesmen
+4
+aaa
+bbb
+aaa
+ccc
