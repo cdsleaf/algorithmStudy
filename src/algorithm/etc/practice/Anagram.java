@@ -27,7 +27,7 @@ public class Anagram {
 
     public static void main(String[] args) throws Exception {
 
-        System.setIn(new FileInputStream("./input_txt/practice/anagram.txt"));
+        System.setIn(new FileInputStream("./input_txt/etc/practice/anagram.txt"));
 
         Scanner sc = new Scanner(System.in);
 

@@ -1,8 +1,6 @@
 package algorithm.etc.practice;
 
 import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 /*
@@ -19,12 +17,12 @@ public class Running {
 
     static int T // 전체 케이스
             ,N; //달리기 선수의 수
-    static long result; //결과값
-    static List<Integer> inputRunners = new ArrayList<>();
+    static int[] runners  = new int[100000];
+    static int[] temp = new int[100000];
 
     public static void main(String[] args) throws Exception {
 
-        System.setIn(new FileInputStream("./input_txt/practice/running.txt"));
+        System.setIn(new FileInputStream("./input_txt/etc/practice/running.txt"));
 
         Scanner sc = new Scanner(System.in);
 
@@ -32,91 +30,32 @@ public class Running {
 
         for(int i=0; i<T; i++){
 
-            result = 0;
-            inputRunners.clear();
             N = sc.nextInt();
 
             for(int j=0; j<N; j++){
-                inputRunners.add(sc.nextInt());
+                runners[j] = sc.nextInt();
             }
 
-            mergeSort(inputRunners);
-
-            System.out.println("#"+(i+1)+" "+result);
+            System.out.println( "#"+(i+1)+" "+mergeSort(0, N-1) );
         }
     }
 
-    public static List<Integer> mergeSort(List<Integer> runners){
+    public static long mergeSort(int s, int e){
 
-        if(runners.size() < 2) return runners;
+        if(s == e) return 0;
+        int m = s+e >> 1;
+        long ret = mergeSort(s, m) + mergeSort(m+1, e);
 
-        final List<Integer> leftList = runners.subList(0, runners.size()/2);
-        final List<Integer> rightList = runners.subList( runners.size()/2, runners.size());
-
-        return merge(mergeSort(leftList), mergeSort(rightList));
-    }
-
-    public static List<Integer> merge(List<Integer> left, List<Integer> right){
-
-        int leftIndex = 0;
-        int rightIndex = 0;
-        int duplicatedCount = 0;
-        List<Integer> calculList = new ArrayList<>(left.size());
-        List<Integer> returnList = new ArrayList<>(left.size()+right.size());
-
-        while(left.size() > leftIndex && right.size() > rightIndex){
-
-            if(left.get(leftIndex) < right.get(rightIndex)) {
-                calculList.add(left.get(leftIndex));
-                returnList.add(left.get(leftIndex));
-                leftIndex++;
-            }else if(left.get(leftIndex) > right.get(rightIndex)){
-
-                duplicatedCount = calculatedResult(calculList, right, rightIndex, duplicatedCount);
-
-                returnList.add(right.get(rightIndex));
-                rightIndex++;
+        for(int i=s, l=s, r=m+1; i<=e; i++){
+            if(l > m || r <= e && runners[r] <= runners[l]){
+                ret += l-s;
+                temp[i] = runners[r++];
             }else{
-
-                duplicatedCount = calculatedResult(calculList, right, rightIndex, duplicatedCount);
-
-                returnList.add(left.get(leftIndex));
-                calculList.add(left.get(leftIndex));
-                returnList.add(right.get(rightIndex));
-                leftIndex++;
-                rightIndex++;
+                temp[i] = runners[l++];
             }
         }
+        for(int i=s; i<=e; i++) runners[i] = temp[i];
 
-        while(left.size() > leftIndex){
-            returnList.add(left.get(leftIndex));
-            leftIndex++;
-        }
-
-        while(right.size() > rightIndex) {
-
-            duplicatedCount = calculatedResult(calculList, right, rightIndex, duplicatedCount);
-
-            returnList.add(right.get(rightIndex));
-            rightIndex++;
-        }
-
-        return returnList;
-    }
-
-    public static int calculatedResult(List<Integer> mergedList, List<Integer> inputList, int index, int dulpl){
-
-        if(mergedList.isEmpty()) return dulpl;
-
-        if(mergedList.get(mergedList.size()-1) != inputList.get(index)){
-            //만약 동일 능력치의 선수가 연속으로 나열된다면?
-            dulpl = 0;
-        }else{
-            dulpl++;
-        }
-
-        result += (mergedList.size() - dulpl);
-
-        return dulpl;
+        return ret;
     }
 }
