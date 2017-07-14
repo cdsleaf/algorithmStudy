@@ -2,10 +2,10 @@ package algorithm.etc.pro;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
 
 /**
+ *
  2
  4
  -1 0 0 0
@@ -14,14 +14,32 @@ import java.util.Scanner;
 
  #1 5
  #2 15
+
+ 10개 테케 답
+ #1 107
+ #2 10059
+ #3 7450
+ #4 5661
+ #5 730
+ #6 7242
+ #7 2696
+ #8 6317
+ #9 4112
+ #10 11562
+
+ https://www.acmicpc.net/problem/1693
+ https://m.blog.naver.com/PostView.nhn?blogId=programmer18&logNo=220757715920&proxyReferer=https%3A%2F%2Fwww.google.co.kr%2F
+
  */
 public class Coin {
 
-    static int T, N, num, root; //T는 전체 테스트 케이스의 수, N은 노드의 갯수.
-    static int cost[] = new int[10000]; //각 노드의 액면가.
-    static int c_p[] = new int[10000]; //자식-부모 관계
-    static HashMap<Integer, ArrayList<Integer>> p_c = new HashMap(); //부모-자식 관계
-    static int result; //결과값.
+    static final int coinMaxNum = 15;
+    static final int indexMax = 10001;
+    static final int initMaxValue = 99999999;
+    static int  T, N, root, result,nodeIndex; //T는 전체 테스트 케이스의 수, N은 노드의 갯수.
+    static ArrayList<Integer> nodeRelation[] = new ArrayList[indexMax];
+    static boolean visited[] = new boolean[indexMax];
+    static int savedCoinValue[][] = new int[indexMax][coinMaxNum+1]; //coinNum 은 1~15 까지 (0 은 사용하지 않음)
 
     public static void main(String[] args) throws Exception {
 
@@ -35,60 +53,68 @@ public class Coin {
             N = sc.nextInt();
 
             //초기화
-            p_c.clear();
             result = 0;
+            for(int i=0; i<indexMax; i++){
+                for(int j=1; j<=coinMaxNum; j++){
+                    savedCoinValue[i][j] = -1;
+                }
+                visited[i] = false;
+                nodeRelation[i] = new ArrayList<>();
+            }
 
             for(int i=0; i<N; i++){
-                num = sc.nextInt();
+                nodeIndex = sc.nextInt();
 
-                if(num == -1){
+                if(nodeIndex == -1){
                     root = i;
-                    cost[i] = 2; //액면가
-                }
-
-                c_p[i] = num; //자식-부모관계
-
-                //부모-자식관계
-                if(p_c.containsKey(num)){
-                    p_c.get(num).add(i);
                 }else{
-                    ArrayList<Integer> nodeArr = new ArrayList();
-                    nodeArr.add(i);
-                    p_c.put(num, nodeArr);
+                    nodeRelation[nodeIndex].add(i);
+                    //nodeRelation[i].add(nodeIndex);
                 }
             }
 
-            //각 노드의 최적 액면가 셋팅..
-            searchChildren(root);
-
-            for(int j=0; j<N;j++){
-                result += cost[j];
-            }
+            //코인의 액면가를 DFS+DP 를 활용하여 최소값 구하기.
+            result = setCoinValue(root, 1); //root 에서 시작하고 코인 액면가는 1부터 시작.
 
             System.out.println("#"+test_case+" "+result);
         }
     }
 
-    public static void searchChildren(int index){
+    public static int setCoinValue(int index, int coinNum) {
 
-        if(!p_c.containsKey(index)) return;
+        int returnValue;
+        int minValue;
 
-        int childrenCost = 1;
-        int size = p_c.get(index).size();
+        //먼저 이미 저장된 값이 있는지 확인한다.
+        returnValue = savedCoinValue[index][coinNum];
+        if(returnValue != -1) return returnValue;
 
-        if(index != root) {
-            if(c_p[index] == root) {
-                if(size > 1) cost[index] = 3;
-                else childrenCost = 2;
-            }else{
-                if(size > 1) cost[index] = cost[c_p[index]] == 2 ? 3 : 2;
-                else childrenCost = cost[c_p[index]] == 1 ? 2 : 1;
+        //자식이 없는 끝 노드 라면 입력받은 액면가를 그대로 받고 그 값을 리턴.
+        if(nodeRelation[index].size() == 0){
+            savedCoinValue[index][coinNum] = coinNum;
+            return coinNum;
+        }
+
+        //현재 index 를 방문중임으로 체크 true
+        visited[index] = true;
+
+        for(int k=0; k<nodeRelation[index].size(); k++){
+            if(visited[nodeRelation[index].get(k)]) continue;
+            minValue = initMaxValue;
+
+            //index 노드와 연결된 노드들에(nodeRelation[index].get(x)) 액면가(coinNum)가 다르면 해당 액면가로 setCoinValue호출하여 해당 노드의 최소값을 구하고 minValue를 갱신한다.
+            for(int m=1; m<=coinMaxNum; m++){
+
+                if(m != coinNum) minValue = Math.min(minValue, setCoinValue(nodeRelation[index].get(k), m));
             }
+            returnValue += minValue;
         }
 
-        for(int i=0; i<size; i++){
-            cost[p_c.get(index).get(i)] = childrenCost;
-            searchChildren(p_c.get(index).get(i));
-        }
+        //마지막에 방문상태를 false
+        visited[index] = false;
+
+        savedCoinValue[index][coinNum] = returnValue;
+
+        return returnValue;
     }
 }
