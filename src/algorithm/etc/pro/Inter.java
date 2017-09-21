@@ -108,7 +108,7 @@ public class Inter {
                     for(int c=0; c<4; c++){
                         Xxx = a+xx[c];
                         Yyy = b+yy[c];
-                        if( (Xxx>=0 && Yyy>=0) && Mxy[Xxx][Yyy] != -2 && dCost[Xxx][Yyy] > dCost[a][b]+dCoust){
+                        if( (Xxx>=0 && Xxx<xSize && Yyy>=0 && Yyy<ySize) && Mxy[Xxx][Yyy] != -2 && dCost[Xxx][Yyy] > dCost[a][b]+dCoust){
                             dCost[Xxx][Yyy] = dCost[a][b]+dCoust;
                             //여기에서 a == xSize-1 이면서 b == ySize-1 이면 마지막 점인데 여기에서도 갱신이 된다는 건 워프가 반복되면서 거꾸로 흘러가는 것.
                             if(a == xSize-1 && b == ySize-1) result = "mininf";
