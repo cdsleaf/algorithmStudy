@@ -33,7 +33,7 @@ import java.util.Scanner;
  */
 public class Coin {
 
-    static final int coinMaxNum = 15;
+    static final int coinMaxNum = 7;
     static final int indexMax = 10001;
     static final int initMaxValue = 99999999;
     static int  T, N, root, result,nodeIndex; //T는 전체 테스트 케이스의 수, N은 노드의 갯수.
@@ -53,7 +53,7 @@ public class Coin {
             N = sc.nextInt();
 
             //초기화
-            result = 0;
+            result = initMaxValue;
             for(int i=0; i<indexMax; i++){
                 for(int j=1; j<=coinMaxNum; j++){
                     savedCoinValue[i][j] = -1;
@@ -74,7 +74,10 @@ public class Coin {
             }
 
             //코인의 액면가를 DFS+DP 를 활용하여 최소값 구하기.
-            result = setCoinValue(root, 1); //root 에서 시작하고 코인 액면가는 1부터 시작.
+            for(int i=1; i<=coinMaxNum; i++){
+                result = Math.min(result, setCoinValue(root, i)); //root 에서 시작하고 코인 액면가는 1부터 시작.
+            }
+
 
             System.out.println("#"+test_case+" "+result);
         }
@@ -87,7 +90,11 @@ public class Coin {
 
         //먼저 이미 저장된 값이 있는지 확인한다.
         returnValue = savedCoinValue[index][coinNum];
-        if(returnValue != -1) return returnValue;
+        if(returnValue != -1){
+            return returnValue;
+        }else{
+            returnValue = coinNum;
+        }
 
         //자식이 없는 끝 노드 라면 입력받은 액면가를 그대로 받고 그 값을 리턴.
         if(nodeRelation[index].size() == 0){
