@@ -15,6 +15,7 @@ public class ArticulationBridges {
     static Map<Integer, List<NodeLineInfo>> connectedNodeInfoList = new HashMap<>();
     static List<NodeLineInfo> NodeLineInfoList;
     static Set<Integer> resultSet = new TreeSet<>();
+    static StringBuilder result = new StringBuilder();
 
     static class NodeLineInfo{
         int node;
@@ -95,10 +96,10 @@ public class ArticulationBridges {
                 }
             }
 
-            String result="";
+            result.setLength(0);
             Integer[] r = resultSet.toArray(new Integer[resultSet.size()]);
             for(int s=0; s<resultSet.size(); s++){
-                result += " "+r[s];
+                result.append(" "+r[s]);
             }
 
             System.out.println("#"+test_case+" "+resultSet.size()+result);
