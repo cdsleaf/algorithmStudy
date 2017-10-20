@@ -63,6 +63,7 @@ public class Inter {
             //초기화
             tempX = -1;
             tempY = -1;
+            result = "";
             wp.clear();
             for(int i=0; i<30; i++){
                 for(int j=0; j<30; j++){
@@ -87,39 +88,47 @@ public class Inter {
                     wp.add(new Point(sc.nextInt(),sc.nextInt(),sc.nextInt()));
                 }
             }
+            for(int ab = 0; ab<xSize*ySize; ab++) {
+                for (int a = 0; a < xSize; a++) {
+                    for (int b = 0; b < ySize-1; b++) {
+                        //운석인 경우
+                        if (Mxy[a][b] == -2) continue;
+                        //워프인 경우
+                        if (Mxy[a][b] >= 0) {
+                            point = wp.get(Mxy[a][b]);
 
-            for(int a=0; a<xSize; a++){
-                for(int b=0; b<ySize; b++){
-                    //운석인 경우
-                    if(dCost[a][b] == INF) continue;
-                    //워프인 경우
-                    if(Mxy[a][b] >= 0){
-                        point = wp.get(Mxy[a][b]);
-                        if(dCost[point.x][point.y] > dCost[a][b]+point.t){
-                            dCost[point.x][point.y] = dCost[a][b]+point.t;
+                            if (Mxy[point.x][point.y] >= 0 && point.t < 0) {
+                                result = "mininf";
+                                break;
+                            }
+
+                            if (dCost[point.x][point.y] > dCost[a][b] + point.t) {
+                                dCost[point.x][point.y] = dCost[a][b] + point.t;
+                            }
+//                            tempX = a;
+//                            tempY = b;
+//                            a = point.x;
+//                            b = point.y;
                         }
-                        tempX = a;
-                        tempY = b;
-                        a= point.x;
-                        b= point.y;
-                    }
 
-                    //아래는 일반적인 경우.
-                    for(int c=0; c<4; c++){
-                        Xxx = a+xx[c];
-                        Yyy = b+yy[c];
-                        if( (Xxx>=0 && Xxx<xSize && Yyy>=0 && Yyy<ySize) && Mxy[Xxx][Yyy] != -2 && dCost[Xxx][Yyy] > dCost[a][b]+dCoust){
-                            dCost[Xxx][Yyy] = dCost[a][b]+dCoust;
-                            //여기에서 a == xSize-1 이면서 b == ySize-1 이면 마지막 점인데 여기에서도 갱신이 된다는 건 워프가 반복되면서 거꾸로 흘러가는 것.
-                            if(a == xSize-1 && b == ySize-1) result = "mininf";
+                        if(Mxy[a][b] == -1) {
+                            for (int c = 0; c < 4; c++) {
+                                Xxx = a + xx[c];
+                                Yyy = b + yy[c];
+                                if ((Xxx >= 0 && Xxx < xSize && Yyy >= 0 && Yyy < ySize) && Mxy[Xxx][Yyy] != -2 && dCost[Xxx][Yyy] > dCost[a][b] + dCoust) {
+                                    dCost[Xxx][Yyy] = dCost[a][b] + dCoust;
+                                    if (ab == xSize * ySize - 1) result = "mininf";
+                                    break;
+                                }
+                            }
                         }
-                    }
 
-                    if(tempX != -1){
-                        a = tempX;
-                        b = tempY;
-                        tempX = -1;
-                        tempY = -1;
+//                        if (tempX != -1) {
+//                            a = tempX;
+//                            b = tempY;
+//                            tempX = -1;
+//                            tempY = -1;
+//                        }
                     }
                 }
             }
